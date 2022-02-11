@@ -2,12 +2,10 @@ package application;
 
 import domain.dao.DaoFactory;
 import domain.dao.VendedorDao;
-import domain.dao.impl.VendedorDaoJDBC;
 import domain.model.Departamento;
 import domain.model.Vendedor;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.util.List;
 
 public class Program {
@@ -21,6 +19,12 @@ public class Program {
         Departamento dep = new Departamento(2, null);
 
         List<Vendedor> test2 = vendedorDao.findByDepartamento(dep);
+
+        List<Vendedor> test3 = vendedorDao.findAll();
+        System.out.println("Teste por all");
+        for(Vendedor x : test3){
+            System.out.println(x);
+        }
 
         System.out.println("Teste por departamento");
         for(Vendedor x : test2){

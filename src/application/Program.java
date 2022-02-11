@@ -6,6 +6,8 @@ import domain.model.Departamento;
 import domain.model.Vendedor;
 
 
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 
 public class Program {
@@ -21,6 +23,12 @@ public class Program {
         List<Vendedor> test2 = vendedorDao.findByDepartamento(dep);
 
         List<Vendedor> test3 = vendedorDao.findAll();
+
+        Vendedor novoVendedor = new Vendedor(null, "Marcos", "marcos@gmail.com", LocalDate.now(), 3000.00, dep);
+        vendedorDao.insert(novoVendedor);
+        System.out.println("INserido: " + novoVendedor.getId());
+
+
         System.out.println("Teste por all");
         for(Vendedor x : test3){
             System.out.println(x);

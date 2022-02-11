@@ -6,10 +6,7 @@ import domain.dao.VendedorDao;
 import domain.model.Departamento;
 import domain.model.Vendedor;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +23,44 @@ public class VendedorDaoJDBC implements VendedorDao {
 
     @Override
     public void insert(Vendedor obj) {
+        PreparedStatement st = null;
+
+        try {
+            //realiza sql para insert + passa os dados
+            st = conn.prepareStatement("INSERT INTO seller " +
+                            "(Name, Email, BirthDate, BaseSalary, DepartmentId) " +
+                            "VALUES " +
+                            "(?, ?, ?, ?, ?)",
+                            Statement.RETURN_GENERATED_KEYS);
+
+            st.setString(1, obj.getNome());
+            st.setString(2, obj.getEmail());
+            st.setDate(3, Date.valueOf(obj.getDataAniversario()));
+            st.setDouble(4, obj.getSalario());
+            st.setInt(5, obj.getDepartamento().getId());
+
+            //recebe se hoube execução
+            int linhasAfetadas = st.executeUpdate();
+
+            //se houve abre o resultSet e quando ha uma nova linha,
+            // joga o id daquela linha para a variavel obj, para que possa ser impressa em tela
+            if (linhasAfetadas > 0 ){
+                ResultSet rs = st.getGeneratedKeys();
+                if (rs.next()){
+                    int id = rs.getInt(1);
+                    obj.setId(id);
+                }else {
+                    throw new DbException("Unexpected error! Nenhuma linha alterada");
+                }
+                DB.closeResultSet(rs);
+            }
+        }
+        catch (SQLException e ){
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
 
     }
 

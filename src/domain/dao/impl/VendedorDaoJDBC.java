@@ -53,16 +53,9 @@ public class VendedorDaoJDBC implements VendedorDao {
             //faz a validação, a Proxima linha (1 pois a primeira é zero)
             //se for vazia retorna nulo, se não ira setar os valores para os objetos de cada um
             if (rs.next()){
-                Departamento dep = new Departamento();
-                dep.setId(rs.getInt("departmentid"));
-                dep.setNome(rs.getString("depname"));
-                Vendedor vendedor = new Vendedor();
-                vendedor.setId(rs.getInt("id"));
-                vendedor.setNome(rs.getString("name"));
-                vendedor.setEmail(rs.getString("email"));
-                vendedor.setDataAniversario(rs.getTimestamp("birthdate").toLocalDateTime().toLocalDate());
-                vendedor.setSalario(rs.getDouble("basesalary"));
-                vendedor.setDepartamento(dep);
+                //chamado a função auxiliar para instanciar.
+                Departamento dep = instanciarDepartamento(rs);
+                Vendedor vendedor = instanciarVendedor(rs, dep);
                 return vendedor;
             }
             return null;
@@ -74,6 +67,25 @@ public class VendedorDaoJDBC implements VendedorDao {
             DB.closeStatement(st);
             DB.closeResultSet(rs);
         }
+    }
+
+    //alternado toda a instanciação para uma função auxiliar
+    private Vendedor instanciarVendedor(ResultSet rs, Departamento dep) throws SQLException {
+        Vendedor vendedor = new Vendedor();
+        vendedor.setId(rs.getInt("id"));
+        vendedor.setNome(rs.getString("name"));
+        vendedor.setEmail(rs.getString("email"));
+        vendedor.setDataAniversario(rs.getTimestamp("birthdate").toLocalDateTime().toLocalDate());
+        vendedor.setSalario(rs.getDouble("basesalary"));
+        vendedor.setDepartamento(dep);
+        return vendedor;
+    }
+    //alternado toda a instanciação para uma função auxiliar
+    private Departamento instanciarDepartamento(ResultSet rs) throws SQLException {
+        Departamento dep = new Departamento();
+        dep.setId(rs.getInt("departmentid"));
+        dep.setNome(rs.getString("depname"));
+        return dep;
     }
 
     @Override

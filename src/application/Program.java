@@ -26,20 +26,26 @@ public class Program {
 
         Vendedor novoVendedor = new Vendedor(null, "Marcos", "marcos@gmail.com", LocalDate.now(), 3000.00, dep);
         vendedorDao.insert(novoVendedor);
-        System.out.println("INserido: " + novoVendedor.getId());
+        System.out.println("-----------------INserido: " + novoVendedor.getId());
 
 
-        System.out.println("Teste por all");
+        System.out.println("----------------------Teste por all");
         for(Vendedor x : test3){
             System.out.println(x);
         }
 
-        System.out.println("Teste por departamento");
+        System.out.println("-----------Teste por departamento");
         for(Vendedor x : test2){
             System.out.println(x);
         }
 
-        System.out.println("Teste por id");
+        System.out.println("-----------Teste por id");
         System.out.println(test);
+
+        System.out.println("-----------_Teste update");
+        test = vendedorDao.findById(1);
+        test.setNome("Marcos Schulz");
+        vendedorDao.update(test);
+        System.out.println("update finalizado");
     }
 }

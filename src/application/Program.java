@@ -9,10 +9,13 @@ import domain.model.Vendedor;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.List;
+import java.util.Scanner;
 
 public class Program {
 
     public static void main (String [] args){
+
+        Scanner sc = new Scanner(System.in);
 
         VendedorDao vendedorDao = DaoFactory.createVendedorDao();
 
@@ -47,5 +50,11 @@ public class Program {
         test.setNome("Marcos Schulz");
         vendedorDao.update(test);
         System.out.println("update finalizado");
+
+
+        System.out.println("----------teste 6 delete");
+        System.out.println("Informe o id a deletar: ");
+        int delete = sc.nextInt();
+        vendedorDao.deleteById(delete);
     }
 }

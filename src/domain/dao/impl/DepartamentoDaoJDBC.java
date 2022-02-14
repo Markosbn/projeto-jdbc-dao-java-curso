@@ -1,15 +1,13 @@
 package domain.dao.impl;
 
+import db.DB;
 import db.DbException;
 import domain.dao.DaoFactory;
 import domain.dao.DepartamentoDao;
 import domain.model.Departamento;
 import org.postgresql.shaded.com.ongres.scram.common.stringprep.StringPreparation;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,17 +21,78 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
 
     @Override
     public void insert(Departamento obj) {
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement("INSERT INTO department \n" +
+                    "(Name)\n" +
+                    "VALUES \n" +
+                    "(?)",  Statement.RETURN_GENERATED_KEYS);
 
+            st.setString(1, obj.getNome());
+
+            int linhasAfetadas = st.executeUpdate();
+
+            if(linhasAfetadas > 0){
+                ResultSet rs = st.getGeneratedKeys();
+                if (rs.next()){
+                    int id = rs.getInt(1);
+                    obj.setId(id);
+                }else {
+                    throw new DbException("Unexpectec error! Nenhuma linha alterada");
+                }
+                DB.closeResultSet(rs);
+            }
+        }
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
     public void update(Departamento obj) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement("UPDATE department " +
+                    "SET Name = ?" +
+                    "WHERE Id = ?");
 
+            st.setString(1, obj.getNome());
+            st.setInt(2, obj.getId());
+
+            st.executeUpdate();
+        }
+        catch (SQLException e){
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
     public void deleteById(Integer id) {
+        PreparedStatement st = null;
 
+        try {
+            st = conn.prepareStatement("DELETE FROM department " +
+                    "WHERE Id = ?");
+            st.setInt(1, id);
+
+            int linhasAfetadas = st.executeUpdate();
+
+            if(linhasAfetadas == 0){
+                throw new DbException("Erro: ID não existe");
+            }
+        }
+        catch (SQLException e){
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
@@ -57,6 +116,10 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
         }
         catch (SQLException e){
             throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
         }
     }
 
@@ -87,6 +150,10 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
         }
         catch (SQLException e){
             throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
         }
     }
 }

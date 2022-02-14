@@ -71,5 +71,25 @@ public class Program {
 
         System.out.println("testes dep find all:");
         System.out.println(depAll);
+
+        Departamento depIns = new Departamento(null, "Joias");
+        depDao.insert(depIns);
+
+        System.out.println("testes dep insert");
+        System.out.println(depAll);
+        System.out.println("Inserido" + depIns.getId());
+
+        System.out.println("Teste update");
+        depTeste = depDao.findById(5);
+        depTeste.setNome("Tintas");
+        depDao.update(depTeste);
+        System.out.println("Update finalizado");
+
+        System.out.println("teste delete");
+        System.out.println("Insira o id para deletar");
+        int delete = sc.nextInt();
+        depDao.deleteById(delete);
+        System.out.println("Deletado");
+
     }
 }

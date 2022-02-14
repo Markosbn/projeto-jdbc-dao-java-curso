@@ -1,7 +1,9 @@
 package application;
 
 import domain.dao.DaoFactory;
+import domain.dao.DepartamentoDao;
 import domain.dao.VendedorDao;
+import domain.dao.impl.DepartamentoDaoJDBC;
 import domain.model.Departamento;
 import domain.model.Vendedor;
 
@@ -54,7 +56,16 @@ public class Program {
 
         System.out.println("----------teste 6 delete");
         System.out.println("Informe o id a deletar: ");
-        int delete = sc.nextInt();
-        vendedorDao.deleteById(delete);
+        //int delete = sc.nextInt();
+        //vendedorDao.deleteById(delete);
+
+        //----------------------------------------------------------------------------------
+        DepartamentoDao depDao = DaoFactory.createDepartamentoDao();
+
+        Departamento depTeste = depDao.findById(3);
+
+        System.out.println("testes dep find id:");
+        System.out.println(depTeste);
+
     }
 }

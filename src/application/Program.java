@@ -67,5 +67,9 @@ public class Program {
         System.out.println("testes dep find id:");
         System.out.println(depTeste);
 
+        List<Departamento> depAll = depDao.findAll();
+
+        System.out.println("testes dep find all:");
+        System.out.println(depAll);
     }
 }

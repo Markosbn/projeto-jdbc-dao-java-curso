@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DepartamentoDaoJDBC implements DepartamentoDao {
@@ -68,6 +69,24 @@ public class DepartamentoDaoJDBC implements DepartamentoDao {
 
     @Override
     public List<Departamento> findAll() {
-        return null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            st = conn.prepareStatement("SELECT * from department \n" +
+                    "order by name ");
+
+            rs = st.executeQuery();
+
+            List<Departamento> departamentoList = new ArrayList<>();
+            while (rs.next()) {
+                Departamento dep = instanciarDepartamento(rs);
+                departamentoList.add(dep);
+            }
+            return departamentoList;
+        }
+        catch (SQLException e){
+            throw new DbException(e.getMessage());
+        }
     }
 }
